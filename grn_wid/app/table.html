@@ -1,0 +1,774 @@
+<%{ PiDet=Proforma_Invoice[ID==input.Inv_ID]; Cusdet=Client[ID==PiDet.Client]; cur=Currency[ID==PiDet.Currency];
+  com_logo=Company_Details[ID !=null]; Shipdet=Shipping_Instruction1[Order_Ref_No==PiDet.Order_ref];
+  cou=Country[ID==PiDet.Country_of_Origin]; inv=Invoice[For_which_Order==PiDet.Order_ref];
+  bnk=Bank_Account[ID==PiDet.Bank]; ord=Order[ID==PiDet.Order_ref]; TandC=T_C[Profile_Name=="PI Standard" ];
+  TandC_subform=T_C_Subform[T_C==TandC.ID].Clause.getAll(); left_column=TandC_subform.sublist(0,14);
+  right_column=TandC_subform.sublist(14,TandC_subform.size()); %>
+  <!DOCTYPE html>
+  <html lang="en">
+
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+      * {
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        font-family: 'Roboto', sans-serif !important;
+      }
+
+      @import url('https://fonts.googleapis.com/css2?family=Kalnia+Glaze:wght@100..700&family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+      @media print {
+        .pagebreak {
+          clear: both;
+          page-break-after: always;
+        }
+      }
+
+      body {
+        background: white !important;
+      }
+
+      .main_container {
+        width: 700px;
+        margin: 0 auto;
+        background: white;
+      }
+
+      .main_header {
+        width: 100%;
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        background: rgb(161, 161, 161);
+        background: linear-gradient(127deg,
+            rgba(161, 161, 161, 1) 0%,
+            rgba(255, 255, 255, 0.9865196078431373) 100%);
+      }
+
+      .Corner_Image {
+        width: 5%;
+        height: 40px;
+      }
+
+      .Corner_Image img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .logo_section {
+        width: 22%;
+        height: 71px;
+        margin: 0 0 0 auto;
+      }
+
+      .logo_section img {
+        width: 100%;
+        height: 100%;
+      }
+
+      .PIAbout_company {
+        display: flex;
+        color: #213c62;
+        flex-direction: column;
+        justify-content: end;
+        list-style: none;
+        font-weight: 500;
+      }
+
+      .PIAbout_company li {
+        text-align: right;
+        font-size: 70%;
+      }
+
+      //         .PIAbout_company li:first-child {
+      //             font-weight: bold;
+      //         }
+      .PItitle {
+        display: flex;
+        align-items: center;
+        width: 100%;
+        list-style: none;
+        font-weight: 500;
+      }
+
+      .PItitle li:first-child {
+        width: 35%;
+        height: 1px;
+        background-color: rgb(206, 206, 206);
+      }
+
+      .PItitle li:last-child {
+        width: 35%;
+        height: 1px;
+        background-color: rgb(206, 206, 206);
+      }
+
+      .PItitle li:nth-child(2) {
+        width: 30%;
+        text-align: center;
+        padding: 0px 10px;
+        font-size: 80%;
+      }
+
+      .header_title {
+        width: 100%;
+        padding: 0px 0px 10px 0px;
+      }
+
+      .header_title h1 {
+        font-size: 26px;
+        color: rgba(33, 60, 98, 1);
+        font-weight: 500;
+      }
+
+      .header_title p {
+        font-size: 13px;
+        color: rgba(33, 60, 98, 1);
+        font-weight: 600;
+      }
+
+      .total_calculation {
+        border: 1px solid #003366;
+        border-radius: 6px;
+      }
+
+      .left_sect {
+        width: 100%;
+        border: 1px solid rgba(33, 60, 98, 1);
+        padding: 10px;
+        border-radius: 5px;
+      }
+
+      .SpicelContainer {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px 0px;
+        width: 100%;
+        align-items: start;
+      }
+
+      .SplBox {
+        min-height: 110px;
+      }
+
+      .SplBox h3 {
+        font-size: 10px;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+        margin: 5px 0px;
+      }
+
+      .SplBox p {
+        font-size: 9px !important;
+        font-weight: 500 !important;
+      }
+
+      .SplBox1 {
+        min-height: 80px;
+      }
+
+      .SplBox1 h3 {
+        font-size: 10px;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+        margin: 5px 0px;
+      }
+
+      .SplBox1>div {
+        font-size: 9px !important;
+        font-weight: 500 !important;
+      }
+
+      .belowTitle {
+        padding: 0px 10px;
+        width: 100%;
+        background: rgba(33, 60, 98, 1);
+      }
+
+      .belowTitle h3 {
+        color: white;
+        font-size: 16px;
+        text-align: center;
+        padding: 5px 0px;
+        font-weight: 600;
+      }
+
+      .belowTitle p {
+        color: white;
+        font-size: 9px;
+        text-align: center;
+        padding: 5px 0px;
+        font-weight: 300;
+      }
+
+      .belowTitle li:first-child {
+        width: 100%;
+        height: 1px;
+        background-color: rgba(216, 216, 216, 1);
+      }
+
+      .banking-section {
+        display: flex;
+        gap: 20px;
+      }
+
+      .banking-details,
+      .correspondence-details {
+        flex: 1;
+        background-color: #fff;
+        maargin-right: 5px;
+      }
+
+      .banking-content .bank-Content {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .banking-Values li {
+        display: flex;
+        justify-content: space-between;
+        padding-bottom: 3px;
+        list-style: none;
+        font-size: 10px;
+      }
+
+      .banking-Values li span {
+        font-size: 14px;
+        font-weight: 600;
+        color: rgba(33, 60, 98, 1);
+      }
+
+      .banking-content .bank-Content tr td {
+        padding: 1px;
+        border: none;
+        vertical-align: top;
+        color: rgba(34, 34, 34, 1);
+        font-weight: 400;
+        font-size: 9px;
+      }
+
+      .banking-content p {
+        margin: 8px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .banking-content p span:first-child {
+        color: black;
+        width: 140px;
+      }
+
+      .banking-details,
+      .correspondence-details {
+        flex: 1;
+        background-color: #fff;
+        maargin-right: 5px;
+      }
+
+      .banking-details,
+      .correspondence-details h3 {
+        color: #213c62;
+        font-size: 90%;
+      }
+
+      .banking-details h3 {
+        font-size: 80%;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+      }
+
+      .summary-section {
+        font-family: Arial, sans-serif;
+        width: 100%;
+      }
+
+      .summary-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+      }
+
+      .summary-column {
+        width: 48%;
+      }
+
+      .summary-line {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 5px;
+        color: #222222;
+        font-weight: 500;
+      }
+
+      .summary-line span {
+        font-size: 80%;
+      }
+
+      .summary-words {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: end;
+        margin-top: 10px;
+      }
+
+      .summary-words span {
+        font-size: 80%;
+      }
+
+      .summary-words .summary-bold {
+        font-size: 65%;
+      }
+
+      .signature-box img {
+        width: 100px;
+        height: auto;
+      }
+
+      .signature-text {
+        font-size: 14px;
+        font-weight: bold;
+      }
+
+      .signature-boxPtag {
+        font-size: 75%;
+      }
+
+      .declaration {
+        width: 100%;
+        padding: 4px 0px;
+      }
+
+      .declaration1 {
+        width: 100%;
+        padding: 4px 0px;
+      }
+
+      .declaration h3 {
+        font-size: 80%;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+      }
+
+      .declaration1 h3 {
+        font-size: 80%;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+      }
+
+      .declaration-para>li {
+        font-size: 9px;
+        border-top: 1px dashed #bebebe;
+        border-bottom: 1px dashed #bebebe;
+        padding: 3px 0px;
+        text-align: center;
+        list-style: none;
+      }
+
+      .declaration-para>div {
+        font-size: 9px;
+      }
+
+      .declaration-para1>div {
+        font-size: 9px;
+        padding: 4px 2px;
+      }
+
+      .declaration-para>ol li {
+        font-size: 7px;
+        padding: 3px 0px;
+      }
+
+      .declaration-para p {
+        font-size: 9px;
+      }
+
+      .lcCluase {
+        width: 100%;
+        padding: 0px 0px;
+      }
+
+      .lcCluase h3 {
+        font-size: 80%;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+      }
+
+      .lcCluase-para>div {
+        font-size: 8px;
+        padding: 6px 0px 6px 8px;
+      }
+
+      .footer_section {
+        display: flex;
+        width: 100%;
+        justify-content: space-between;
+        align-items: baseline;
+        margin: 25px 0px 20px 0px;
+      }
+
+      .footer_section .signature_section {
+        display: flex;
+        flex-direction: column;
+      }
+
+      .footer_section .signature_section .seller {
+        width: 100%;
+      }
+
+      .footer_section .signature_section .buyer {
+        width: 100%;
+        border: 1px solid rgb(153, 153, 153);
+        padding: 8px;
+      }
+
+      .footer_section .signature_section .seller_img {
+        width: 100px;
+        height: 70px;
+      }
+
+      .footer_section .signature_section .seller_img img {
+        width: 100%;
+      }
+
+      .footer_section .signature_section .seller_img p {
+        font-size: 75%;
+      }
+
+      .footer_section .signature_section p {
+        padding: 10px 0px;
+        text-align: center;
+        font-size: 10px;
+      }
+
+      .footer_section .Bank_section {
+        display: flex;
+        justify-content: end;
+        width: 60%;
+        flex-direction: column;
+        border-left: none;
+      }
+
+      .footer_section .Bank_section li {
+        display: flex;
+        padding: 6px 0px;
+        list-style: none;
+        font-size: 12px;
+        justify-content: end;
+      }
+
+      .footer_section .Bank_section li span {
+        display: block;
+        width: 50%;
+        text-align: right;
+      }
+
+      .empty_space {
+        margin-top: 100px;
+        width: 100%;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, sans-serif;
+      }
+
+      .PIheader {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .PIaddress-section {
+        width: 100%;
+        // 			margin-right:10px;
+      }
+
+      .PIaddress-section h3 {
+        margin-bottom: 5px;
+        text-decoration: underline;
+      }
+
+      .PIaddress-section p {
+        margin-bottom: 8px;
+      }
+
+      .table-section {
+        width: 58%;
+        border: 1px solid #ccc;
+        padding: 10px;
+      }
+
+      .content-section {
+        margin-top: 20px;
+      }
+
+      .details-grid {
+        display: flex;
+        gap: 5px;
+        align-items: start;
+        margin-bottom: 8px;
+      }
+
+      .left-column {
+        width: 35%;
+      }
+
+      .left-column h3 {
+        font-size: 11px;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+        margin: 9px 0px;
+      }
+
+      .right-column {
+        width: 65%;
+        margin-top: 5px;
+      }
+
+      .right-inner {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 270px;
+      }
+
+      .details-boxShipment-box {
+        margin-top: 5px;
+        border-radius: 6px;
+      }
+
+      .details-box {
+        margin-bottom: 5px;
+        border: 1px solid #003366;
+        border-radius: 6px;
+        min-height: 300px;
+      }
+
+      .details-box h3 {
+        margin-bottom: 10px;
+        font-size: 14px;
+        font-weight: 500;
+      }
+
+      .details-box .product-table {
+        border-collapse: collapse;
+        height: 100%;
+        border-radius: 6px;
+        overflow: hidden;
+      }
+
+      .details-box .product-table tbody {
+        height: 100%;
+      }
+
+      .details-box .product-table th {
+        background-color: rgba(33, 60, 98, 1);
+        color: rgba(255, 255, 255, 1);
+        font-weight: 500;
+        font-size: 8px;
+        padding: 6px;
+        width: 10%;
+      }
+
+      .details-box .product-table th:first-child {
+        width: 5%;
+      }
+
+      .details-box .product-table th:nth-child(2) {
+        width: 40%;
+      }
+
+      .details-box .product-table th:nth-child(3) {
+        width: 22%;
+      }
+
+      .details-box .product-table th:nth-child(6) {
+        width: 13%;
+      }
+
+      .right-column .details-box .product-table td:first-child {
+        text-align: center;
+      }
+
+      .right-column .details-box .product-table tr:last-child td:first-child {
+        border-top-left-radius: 6px;
+        border-bottom-left-radius: 6px;
+      }
+
+      .right-column .details-box .product-table tr:last-child td:last-child {
+        border-top-right-radius: 6px;
+        border-bottom-right-radius: 6px;
+      }
+
+      .right-column .details-box .product-table td {
+        padding-left: 5px;
+        text-align: left;
+        color: rgba(34, 34, 34, 1);
+        border-left: 1px solid rgba(33, 60, 98, 1);
+        border-right: 1px solid rgba(33, 60, 98, 1);
+        font-weight: 400;
+        vertical-align: top;
+        font-size: 9px;
+        padding-top: 2px;
+      }
+
+      .right-column .details-box .product-table td span {
+        margin: 0px 0px;
+        display: block;
+      }
+
+      .right-column .details-box .product-table td:first-child {
+        border-left: none;
+      }
+
+      .right-column .details-box .product-table td:last-child {
+        border-right: none;
+      }
+
+      .amount-summary {
+        margin-bottom: 20px;
+        border: 1px solid #003366;
+        border-radius: 6px;
+      }
+
+      .shipment-box {
+        border: 1px solid #003366;
+        border-radius: 10px;
+
+        background-color: #fff;
+      }
+
+      .shipment-details {
+        width: 100%;
+        border-collapse: collapse;
+      }
+
+      .shipment-details td {
+        padding: 2px;
+        border: none;
+        vertical-align: top;
+        color: rgba(34, 34, 34, 1);
+        font-weight: 400;
+        font-size: 65%;
+      }
+
+      .shipment-details td li {
+        list-style: none;
+        text-align: left;
+        padding: 2px;
+      }
+
+      .shipment-details td li:first-child {
+        font-size: 13px;
+        padding: 2px;
+      }
+
+      .shipment-details td li:last-child {
+        padding-bottom: 5px;
+      }
+
+      .shipment-details tr td:first-child {
+        color: #222222;
+        width: 40%;
+        vertical-align: top;
+        font-weight: 500;
+        font-size: 65%;
+      }
+
+      .terms-conditions {
+        width: 100%;
+        padding: 2px 0px;
+      }
+
+      .terms-conditions .termParent {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+      }
+
+      .terms-conditions ul {
+        width: 49%;
+      }
+
+      .terms-conditions h3 {
+        font-size: 80%;
+        color: white;
+        background: rgba(33, 60, 98, 1);
+        padding: 5px;
+        border-radius: 4px;
+        margin: 10px 0px;
+        text-align: center;
+      }
+
+      .terms-conditions li {
+        font-size: 11px;
+        margin: 5px 0;
+        list-style: none;
+        text-align: justify;
+      }
+    </style>
+  </head>
+
+  <body>
+    
+    <div class="main_container">
+      
+
+      <div class="details-grid">
+        <div class="left-column">
+
+
+
+        </div>
+        <div class="right-column">
+          <div class="right-inner">
+
+
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    </div>
+  </body>
+
+  </html>
+  <% }%>

@@ -1,0 +1,19 @@
+/* .tableContainer table{
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid black;
+}
+.tableContainer td, .tableContainer th{
+    border: 1px solid black;
+} */
+ body{
+    background-image: linear-gradient(-40deg, #93A5CF, #E4EfE9);
+ }
+ .tableContainer{
+    background: transparent;
+    backdrop-filter: blur(10px);
+    overflow: auto;
+    padding: 20px;
+    
+ }
+ 

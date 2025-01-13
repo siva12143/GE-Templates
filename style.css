@@ -1,0 +1,136 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+*{
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    box-sizing: border-box;
+}
+.poContainer{
+    padding: 30px;
+    font-family: "Open Sans";
+}
+.poContainerHeader,.acceseriesHeader{
+    border: 1px solid black;
+    text-align: center;
+}
+.poContainerHeader{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+}
+.poContainerHeader h4{
+    padding-top: 20px;
+}
+.acceseriesHeader{
+    border-top: none;
+    padding: 5px ;
+}
+.Address_Details{
+    display: flex;
+    flex-wrap: wrap;
+    border: 1px solid black;
+    border-top: none;
+}
+.Address_Details > div{
+    display: flex;
+    width: 50%;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.Address_Details_Left{
+    border-right: 1px dashed black;
+    padding: 10px;
+}
+.Address_Details_Right{
+    padding: 10px;
+}
+.Address_Details_Left div{
+    display: flex;
+    width: 100%;
+    gap: 10px;
+}
+.Address_Details_Right_inner{
+    display: flex;
+    width: 100%;
+}
+.Address_Details_Right_inner > h4{
+    width: 7%;
+}
+.Address_Details_Right_inner > div{
+    width: 90%;
+}
+.Address_Details_Left div h4{
+    width: 25%;
+}
+.Address_Details_Left div p{
+    width: 75%;
+}
+/* .Address_Details_Right div{
+    line-height: 25px;
+} */
+.Address_Details_Right{
+    line-height: 25px;
+}
+.delivery{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 10px;
+    border: 1px solid black;
+    border-top: 0;
+}
+.delivery > div h4{
+    display: inline-block;
+    text-decoration: underline 2px;
+    margin-bottom: 5px;
+}
+
+.ourref{
+    border: 1px solid;
+    border-top: 0;
+    border-bottom: 0;
+    padding: 0 10px 10px;
+}
+.ourref div{
+    display: flex;
+    padding: 5px;
+    gap: 10px;
+}
+.ourref div h4{
+    width: 120px;
+}
+.stateCode h4{
+    width: 150px !important;
+}
+.stateCode{
+    text-align: center;
+    width: 150px;
+    padding: 3px 5px;
+    border: 1px solid black;
+    border-top: 0;
+    margin: 0 auto;
+}
+.tableContainer{
+    /* padding: 10px; */
+}
+.tableContainer table{
+    width: 100%;
+    border-collapse: collapse;
+}
+.tableContainer .table1 th,.tableContainer .table1 td{
+    border: 1px solid black;
+    text-align: left;
+    padding: 5px 10px;
+}
+.tableContainer .table2 th,.tableContainer .table2 td{
+    border: 1px solid black;
+    text-align: left;
+    padding: 5px 10px;
+    width: 11.1%;
+}
+table{
+    position: relative;
+}
+.table1 thead{display: table-header-group
+}

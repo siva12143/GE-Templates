@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="">
+  <div class="formContainer w-[98%] m-auto p-8 flex flex-wrap ">
+    <!-- only dropdown -->
+    <div class="form-group 2xl:w-1/4 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-1 p-4">
+      <label for="planSheet" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Plan Sheet <span
+          class="text-[red]">*</span></label>
+      <select id="planSheet"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 required ">
+        <option value="" selected>Select</option>
+      </select>
+    </div>
+
+    <div class="form-group 2xl:w-1/4 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-1 p-4">
+      <label for="fromWarehouse" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">From Warehouse
+        <span class="text-[red]">*</span></label>
+      <select id="fromWarehouse"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <option value="" selected>Select</option>
+      </select>
+    </div>
+
+    <div class="form-group 2xl:w-1/4 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-1 p-4">
+      <label for="toWarehouse" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Business Warehouse
+        <span class="text-[red]">*</span> </label>
+      <select id="toWarehouse"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <option value="" selected>Select</option>
+      </select>
+    </div>
+
+    <!-- order -->
+    <div class="form-group  2xl:w-1/4 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-1 p-4">
+      <label class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Order <span
+          class="text-[red]">*</span></label>
+      <div id="order"
+        class="bg-gray-50 min-h-[45px] border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 flex flex-wrap gap-1">
+      </div>
+    </div>
+    <!--  -->
+
+    <div class="form-group 2xl:w-1/4 xl:w-1/4 lg:w-1/3 md:w-1/2 sm:w-1 p-4">
+      <label for="itemCategory" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Item Category <span
+          class="text-[red]">*</span> </label>
+      <select id="itemCategory"
+        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
+        <option value="" selected>Select</option>
+      </select>
+    </div>
+
+
+  </div>
+  <!-- Subform -->
+  <div class="tableContainer w-full p-4">
+    <table id="subform" class="table-auto w-[150%] text-left whitespace-no-wrap">
+      <thead>
+        <tr>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[10%]">
+            Item</th>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[15%]">
+            Item Image</th>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[7%]">
+            Size</th>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[7.5%]">
+            Ordered Qty</th>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[7.5%]">
+            GON Qty</th>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[7.5%]">
+            Stock Qty <span class="text-[red]">*</span></th>
+          <th
+            class="text-left px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 rounded-tl rounded-bl w-[7.5%]">
+            Issued Qty <span class="text-[red]">*</span></th>
+        </tr>
+      </thead>
+      <tbody id="tablebody">
+      </tbody>
+    </table>
+  </div>
+
+  <div id="buttonContainer" class="submitContainer p-24 text-center">
+    <button id="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+      Submit
+    </button>
+    <button id="reset" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded">
+      Reset
+    </button>
+  </div>
+
+  <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+  <script src="script.js"></script>
+
+</body>
+
+</html>

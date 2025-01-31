@@ -85,6 +85,9 @@ ZOHO.CREATOR.init()
                         <td  class="border-t-2 border-gray-200 p-2">
                             <input type="text" id="recived${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" required />
                         </td>
+                        <td  class="border-t-2 border-gray-200 p-2">
+                            <input type="text" id="rejected${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" required />
+                        </td>
                 `
                 table.appendChild(row);
             });
@@ -109,9 +112,11 @@ ZOHO.CREATOR.init()
             if (e.target.id == "submit") {
                 rows.forEach((e) => {
                     const recivedQty = e.querySelector("td #recived" + e.id).value
+                    const rejectedQty = e.querySelector("td #rejected" + e.id).value
                     const Data = {
                         data: {
-                            Recived_Qty : recivedQty
+                            Recived_Qty : recivedQty,
+                            Rejected : rejectedQty
                         }
                     };
 

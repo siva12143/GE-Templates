@@ -1,332 +1,98 @@
-<%{
-	PO = Purchase_Order[ID == input.IdVal];
-	POItems = Purchase_Order_Items[Purchase_Order == PO.ID];
-	%>
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
-*{
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    box-sizing: border-box;
-}
-.poContainer{
-    padding: 30px;
-    font-family: "Open Sans";
-}
-.poContainerHeader,.acceseriesHeader{
-    border: 1px solid black;
-    text-align: center;
-}
-.poContainerHeader{
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 10px;
-}
-.poContainerHeader h4{
-    padding-top: 20px;
-}
-.acceseriesHeader{
-    border-top: none;
-    padding: 5px ;
-}
-.Address_Details{
-    display: flex;
-    flex-wrap: wrap;
-    border: 1px solid black;
-    border-top: none;
-}
-.Address_Details > div{
-    display: flex;
-    width: 50%;
-    flex-wrap: wrap;
-    gap: 10px;
-}
-.Address_Details_Left{
-    border-right: 1px dashed black;
-    padding: 10px;
-}
-.Address_Details_Right{
-    padding: 10px;
-}
-.Address_Details_Left div{
-    display: flex;
-    width: 100%;
-    gap: 10px;
-}
-.Address_Details_Right_inner{
-    display: flex;
-    width: 100%;
-}
-.Address_Details_Right_inner > h4{
-    width: 7%;
-}
-.Address_Details_Right_inner > div{
-    width: 90%;
-}
-.Address_Details_Left div h4{
-    width: 25%;
-}
-.Address_Details_Left div p{
-    width: 75%;
-}
-/* .Address_Details_Right div{
-    line-height: 25px;
-} */
-.Address_Details_Right{
-    line-height: 25px;
-}
-.delivery{
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 10px;
-    border: 1px solid black;
-    border-top: 0;
-}
-.delivery > div h4{
-    display: inline-block;
-    text-decoration: underline 2px;
-    margin-bottom: 5px;
-}
-
-.ourref{
-    border: 1px solid;
-    border-top: 0;
-    border-bottom: 0;
-    padding: 0 10px 10px;
-}
-.ourref div{
-    display: flex;
-    padding: 5px;
-    gap: 10px;
-}
-.ourref div h4{
-    width: 120px;
-}
-.stateCode h4{
-    width: 150px !important;
-}
-.stateCode{
-    text-align: center;
-    width: 150px;
-    padding: 3px 5px;
-    border: 1px solid black;
-    border-top: 0;
-    margin: 0 auto;
-}
-.tableContainer{
-    /* padding: 10px; */
-}
-.tableContainer table{
-    width: 100%;
-    border-collapse: collapse;
-}
-.tableContainer .table1 th,.tableContainer .table1 td{
-    border: 1px solid black;
-    text-align: left;
-    padding: 5px 10px;
-}
-.tableContainer .table2 th,.tableContainer .table2 td{
-    border: 1px solid black;
-    text-align: left;
-    padding: 5px 10px;
-    width: 11.1%;
-}
-.table1 thead{
-	display: table-header-group;
-}
-.taxAmount{
-	width:100%;
-	padding:5px;
-	display:flex;
-	justify-content:space-between;
-}
-@media print{
-	.zc-design-switch .zc-pb-page-content-wrapper .zc-pb-tile-card{
-		border-radius:0px;
-	}
-	.poContainer{
-		padding:0;
-	}
-	.Address_Details_Left div h4{
-    width: 28%;
-	}
-	.Address_Details_Left div p{
-		width: 72%;
-	}
-}
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vertical Card Slider</title>
+<style>
+    body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background: linear-gradient(to bottom, #bea2e7 0%, #86b7e7 100%);
+        font-family: "Poppins", sans-serif;
+        flex-direction: column;
+    }
+    .container {
+        position: relative;
+        width: 300px;
+        height: 200px;
+    }
+    .card {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 20px;
+        box-shadow: 0px 10px 15px rgba(0,0,0,0.1);
+        transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out, scale 0.5s ease-in-out;
+    }
+    .card:not(:first-child) {
+        transform: scale(0.9) translateY(20px);
+        opacity: 0.4;
+    }
+    .buttons {
+        margin-top: 20px;
+        display: flex;
+        gap: 10px;
+    }
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: #6c5ce7;
+        color: white;
+        cursor: pointer;
+        font-size: 16px;
+    }
+</style>
 </head>
 <body>
-    <div class="poContainer ">
-        <div class="poContainerHeader">
-            <h2>Girish Exports</h2>
-            <p>Girish Exports, Plot No.20-B, 1st Cross,1st Phase, KIADB Industrial Area,Bangalore-Mysore Highway, Kumbalgodu</p>        
-            <h4>GSTIN : 29AAHFG7183P1ZI</h4>
-        </div>
-
-        <div class="acceseriesHeader">
-            <h2>Accessory Purchase Order (ItemWise)</h2>
-        </div>
-        <div class="Address_Details">
-            <div class="Address_Details_Left">
-                <div><h4>PO. No.</h4> : <p><%=PO.PO_ID%></p></div>
-                <div><h4>PO Date</h4> : <p><%=PO.Date_field1%></p></div>
-                <div><h4>Del. Date</h4> : <p>17/12/2024</p></div>
-                <div><h4>Merchandiser</h4> : <p><%=PO.Purchase_Request.Order.Order_Merchendiser.Name%></p></div>
-                <div><h4>PR No</h4> : <p><%=PO.Purchase_Request.PR_ID%></p></div>
-                <div><h4>Payment Terms</h4> : <p>PDC 60 DAYS</p></div>
-            </div>
-            <div class="Address_Details_Right">
-                <div class="Address_Details_Right_inner">
-                    <h4>TO,</h4>
-                    <div>
-                        <h4><%=PO.Supplier.Supplier%></h4>
-                        <p><%=PO.Supplier.Address%></p>
-                        <p>Contact No. : <%=PO.Supplier.Phone_Number%></p>
-						<p>Email. : <%=PO.Supplier.Email%></p>
-                        <h4>PARTY GSTIN : 03AAFCM7888Q1ZK</h4>
-                        <h4>PARTY STATE CODE : 03</h4>
-                    </div>
-                </div>
-                
-            </div>
-        </div>
-        <div class="delivery">
-            <div>
-                <h4>Delivery At :</h4>
-                <p>ACCESSORY CENTRAL STORE 1</p>
-                <p>Address : Girish Exports, Plot No.20-B, 1st Cross, 1st Phase, KIADB Industrial Area, Bangalore-Mysore Highway, Kumbalgodu</p>            
-            </div>
-            <h4>GSTIN : 29AAHFG7183P1ZI</h4>
-                    </div>
-
-        <div class="ourref">
-            <div class="stateCode">
-                <h4>STATE CODE : 29</h4>
-            </div>
-            <div>
-                <h4>Our Ref No</h4> : <p> 13522, 13523, 13524, 13525, 13526, 13527</p>
-            </div>
-            <div>
-                <h4>Style No</h4> : <p> 401629-FS ,401630-FS ,401649-FS ,401665-FS ,401681-FS ,767667-HS</p>
-            </div>
-            <div>
-                <h4>Buyer Ord No</h4> : <p> 20.5K MC DEC SS25</p>
-            </div>
-        </div>
-        <div class="tableContainer">
-            <table class="table1">
-                <thead>
-                    <tr>
-                        <th>HSN Code</th>
-                        <th>Name of Products</th>
-                        <th>Size</th>
-                        <th>Quantity</th>
-                        <th>UOM</th>
-                        <th>Rate (Rs.)</th>
-                        <th>Amount (Rs.)</th>
-                    </tr>
-                </thead>
-                <tbody>
-<%
-	hsnList = List();
-	for each  rec in POItems
-	{
-		hsnList.add(rec.HSN);
-		%>
-<tr>
-                        <td><%=rec.HSN.HSN_NO%></td>
-                        <td><%=rec.Items.Item%></td>
-                        <td><%=rec.Size.Size%></td>
-                        <td><%=rec.Qty%></td>
-                        <td><%=rec.Units.Purchase_Unit%></td>
-                        <td><%=rec.Rate%></td>
-                        <td><%=rec.Amount%></td>
-                    </tr>
-<%
-	}
-	hsnList = hsnList.distinct();
-	%>
-</tbody>
-            </table>
-            <table class="table2">
-                <thead>
-                    <tr>
-                        <th>HSN Code</th>
-                        <th>IGST Rate</th>
-                        <th>IGST Amount</th>
-                        <th>CGST Rate</th>
-                        <th>CGST Amount</th>
-                        <th>SGST Rate</th>
-                        <th>SGST Amount</th>
-                        <th></th>
-                        <th>GST Amount</th>
-                    </tr>
-                </thead>
-                <tbody>
-				<% 
-				totalIgst = 0;
-				totalCgst = 0;
-				totalSgst = 0;
-				for each rec2 in hsnList{
-					hsn = HSN[ID == rec2];
-					POItems2 = Purchase_Order_Items[HSN == hsn.ID && Purchase_Order == PO.ID];
-					igstAmount = ifnull(POItems2.sum(IGST_Amount),0).round(2);
-					cgstAmount = ifnull(POItems2.sum(CGST_Amount),0).round(2);
-					sgstAmount = ifnull(POItems2.sum(SGST_Amount),0).round(2);
-					totalIgst += igstAmount; 
-					totalCgst += cgstAmount; 
-					totalSgst += sgstAmount; 
-					gstAmount =  ifnull(POItems2.sum(IGST_Amount),0) +  ifnull(POItems2.sum(CGST_Amount),0) +  ifnull(POItems2.sum(SGST_Amount),0);
-					%>
-                    <tr>
-                        <td><%=hsn.HSN_NO%></td>
-                        <td><%=hsn.IGST%></td>
-                        <td><%=igstAmount%></td>
-                        <td><%=hsn.CGST%></td>
-                        <td><%=cgstAmount%></td>
-                        <td><%=hsn.SGST%></td>
-                        <td><%=sgstAmount%></td>
-                        <td></td>
-						<td><%=gstAmount.round(2)%></td>
-                    </tr>
-					<%}%>
-                </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="6" rowspan="6">Total Amount in Words : Rs. Four Hundred Twenty Five Thousand Sixty and Paisa Twenty Three Only</td>
-                        <td colspan="3">Total Amount Before Tax</td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><div class="taxAmount"><p>Add : IGST</p><p><%=totalIgst%></p></div></td> 
-                    </tr>
-                    <tr>
-                        <td colspan="3"><div class="taxAmount"><p> Add : CGST</p><p><%=totalCgst%></p></div></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><div class="taxAmount"><p> Add : SGST</p><p><%=totalSgst%></p></div></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><div class="taxAmount"><p>Tax Amount : GST</p><p><%=PO.GST_Amount%></p></div></td>
-                    </tr>
-                    <tr>
-                        <td colspan="3"><p> Total Amount After Tax</p><p><%=PO.Gross_Amount%></p></td>
-                    </tr>
-                </tfoot>
-            </table>
-        </div>
+    <div class="container" id="slider">
+        <div class="card"><h3>Mohammed Yousef - Frontend Developer</h3></div>
+        <div class="card"><h3>Mohammed - YouTuber & Blogger</h3></div>
+        <!-- <div class="card"><h3>Yousef - Freelancer & Vlogger</h3></div>
+        <div class="card"><h3>Ahmed Yousef - Backend Developer</h3></div> -->
     </div>
+    <div class="buttons">
+        <button onclick="slideUp()">Up</button>
+        <button onclick="slideDown()">Down</button>
+    </div>
+
+    <script>
+        let currentIndex = 0;
+        const cards = document.querySelectorAll(".card");
+
+        function updateSlides() {
+            cards.forEach((card, index) => {
+                if (index === currentIndex) {
+                    card.style.transform = "scale(1) translateY(0)";
+                    card.style.opacity = "1";
+                    card.style.zIndex = "1";
+                } else {
+                    card.style.transform = "scale(0.9) translateY(20px)";
+                    card.style.opacity = "0.4";
+                    card.style.zIndex = "0";
+
+                }
+            });
+        }
+
+        function slideUp() {
+            currentIndex = (currentIndex + 1) % cards.length;
+            updateSlides();
+        }
+
+        function slideDown() {
+            currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+            updateSlides();
+        }
+
+        updateSlides();
+    </script>
 </body>
 </html>
-<%
-
-}%> -->

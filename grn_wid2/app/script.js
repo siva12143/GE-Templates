@@ -62,9 +62,13 @@ ZOHO.CREATOR.init()
             });
             const table = document.querySelector("#subform tbody");
             table.innerHTML = "";
+            let product = {};
             grnList.forEach((e, i) => {
+                
                 const filterUrl = createItemList.filter(obj => obj.ID == e.Items.ID);
                 const row = document.createElement("tr");
+                console.log(e);
+                
                 row.id = e.ID
                 row.innerHTML = `
                         <td class="border-t-2 border-gray-200 p-2">
@@ -87,6 +91,9 @@ ZOHO.CREATOR.init()
                         </td>
                         <td  class="border-t-2 border-gray-200 p-2">
                             <input type="text" id="rejected${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" required />
+                        </td>
+                        <td  class="border-t-2 border-gray-200 p-2 "style="display:none">
+                            <input type="text" id="grnQty${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="${e.GRN_Recived || 0}" required />
                         </td>
                 `
                 table.appendChild(row);
@@ -113,10 +120,12 @@ ZOHO.CREATOR.init()
                 rows.forEach((e) => {
                     const recivedQty = e.querySelector("td #recived" + e.id).value
                     const rejectedQty = e.querySelector("td #rejected" + e.id).value
+                    const grnQty = e.querySelector("td #grnQty" + e.id).value
                     const Data = {
                         data: {
                             Recived_Qty : recivedQty,
-                            Rejected : rejectedQty
+                            Rejected : rejectedQty,
+                            GRN_Recived : parseInt(recivedQty) + parseInt(grnQty),
                         }
                     };
 
@@ -134,6 +143,36 @@ ZOHO.CREATOR.init()
                         
                     });
                 })
+                const newData = {
+                    data : {
+                        Warehouse : getAllPO.Warehouse,
+                        Storage : getAllPO.Storage,
+                        Recived_Flag: getAllPO.Recived_Flag,
+                        Purchase_Order1:getAllPO.Purchase_Order1,
+                        Invoice_No:getAllPO.Invoice_No,
+                        Invoice_Date:getAllPO.Invoice_Date,
+                        Gate_No:getAllPO.Gate_No,
+                        GRN_ID:getAllPO.GRN_ID,
+                        GRN_Date:getAllPO.GRN_Date,
+                        Financiar_Type:getAllPO.Financiar_Challan_No,
+                        Chellan_No:getAllPO.Chellan_No,
+                        Financiar_Challan_No:getAllPO.Financiar_Challan_No
+                    }
+                }
+                console.log("RUN2");
+
+                config = {
+                    appName: "girish-exports",
+                    reportName: "All_Goods_Recived_Note",
+                    id: queryParams.IdVal,
+                    data : newData,
+                }
+                ZOHO.CREATOR.API.updateRecord(config).then(function (response) {
+                    console.log(response.data);
+                    console.log("run1");
+                });
+                console.log(config);
+                
             }
             if (e.target.id == "reset") {
                 location.reload();

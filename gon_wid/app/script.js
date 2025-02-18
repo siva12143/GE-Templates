@@ -185,11 +185,35 @@ ZOHO.CREATOR.init()
                 );
               };
             const result = filterByItemsAndSize(mergeArray);
-            console.log(result);
+            let productData = {};
+            let totalCount = 0, copy = 0; 
+            mergeArray.forEach(e => {
+                let key = `${e.Items.ID}_${e.Size.ID}_${e.Consumption_Unit.ID}`;
+                if(!productData[key]){
+                    productData[key] = {
+                        Consumption_Unit : e.Consumption_Unit.display_value,
+                        Consumption_ID : e.Consumption_Unit.ID,
+                        Size :  e.Size.display_value,
+                        Size_ID :  e.Size.ID,
+                        Item : e.Items.display_value,
+                        Item_ID : e.Items.ID,
+                        Qty : parseInt(e.Consumption) || 0,
+                    }
+                }else{
+                    productData[key].Qty +=e.Consumption
+                    copy +=1;
+                }
+                totalCount +=1;
+            });
+            const getAllVal = Object.values(productData);
+            console.log(getAllVal);
+            // console.log(totalCount, copy);
+            
             
             
               const subform = document.getElementById("tablebody");
               mergeArray.forEach((e,i) => {
+                
                 const row = document.createElement("tr");
                 row.id = i;
                 row.innerHTML = `

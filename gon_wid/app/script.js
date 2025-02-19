@@ -10,7 +10,7 @@ ZOHO.CREATOR.init()
 
         var queryParams = await ZOHO.CREATOR.UTIL.getQueryParams();
         console.log(queryParams);
-        
+
         // get po count
         config = {
             appName: "girish-exports",
@@ -32,8 +32,8 @@ ZOHO.CREATOR.init()
                 renderRecordCount += 200;
                 response.data.forEach(e => {
                     getAllPlanSheet.push(e);
-                    console.log(e,"response");
-                    
+                    console.log(e, "response");
+
                 });
             });
 
@@ -73,33 +73,33 @@ ZOHO.CREATOR.init()
         getWare.addEventListener('change', () => {
             const getWare2 = document.getElementById("toWarehouse");
             getWare2.innerHTML = "<option>Select</option>";
-        filterwarehouse = warehouse.filter(obj => obj.ID != getWare.value);
-        filterwarehouse.forEach(e => {
-            const option = document.createElement("option");
-            option.value = e.ID;
-            option.innerText = e.Factory;
-            getWare2.appendChild(option);
-        });
+            filterwarehouse = warehouse.filter(obj => obj.ID != getWare.value);
+            filterwarehouse.forEach(e => {
+                const option = document.createElement("option");
+                option.value = e.ID;
+                option.innerText = e.Factory;
+                getWare2.appendChild(option);
+            });
         })
 
-                // order ID auto load
+        // order ID auto load
         getPlanSheet.addEventListener("change", async () => {
             const filterPlanSheet = getAllPlanSheet.filter(obj => obj.ID == getPlanSheet.value);
             let setCreiteria = "";
             const getOrder = document.getElementById("order");
             let count = filterPlanSheet[0].Order_ID.length;
-            
+
             filterPlanSheet[0].Order_ID.forEach((e, index) => {
                 const addOrder = document.createElement("span");
                 addOrder.classList = "text-[white] bg-blue-500 px-2 py-1 rounded";
                 addOrder.innerHTML = e.display_value;
                 getOrder.appendChild(addOrder);
                 setCreiteria += `Order == ${e.ID}`;
-                if((index +1) != count){
+                if ((index + 1) != count) {
                     setCreiteria += "||";
-                }                
+                }
             })
-            
+
             config = {
                 appName: "girish-exports",
                 reportName: "All_Order_Acceseries",
@@ -123,7 +123,7 @@ ZOHO.CREATOR.init()
                 getAllFabric = response.data
             })
 
-            
+
         })
 
         // order ID auto load
@@ -136,20 +136,20 @@ ZOHO.CREATOR.init()
             let count = filterPlanSheet[0].Order_ID.length;
             getOrder.innerHTML = "";
             filterPlanSheet[0].Order_ID.forEach((e, index) => {
-                
+
                 const addOrder = document.createElement("span");
                 addOrder.classList = "text-[white] bg-blue-500 px-2 py-1 rounded";
                 addOrder.innerHTML = e.display_value;
                 addOrder.id = e.ID;
                 getOrder.appendChild(addOrder);
                 setCreiteria += `Order == ${e.ID}`;
-                ourRef += "Our_Ref == "+e.display_value;
-                if((index +1) != count){
+                ourRef += "Our_Ref == " + e.display_value;
+                if ((index + 1) != count) {
                     setCreiteria += "||";
                     ourRef += "||";
-                }                
+                }
             })
-            
+
             config = {
                 appName: "girish-exports",
                 reportName: "All_Order_Acceseries",
@@ -172,84 +172,108 @@ ZOHO.CREATOR.init()
                 getAllFabric = response.data
             })
             let GONID = "";
+            let getCount = 0;
+            console.log(setCreiteria);
             config = {
                 appName: "girish-exports",
-                reportName: "All_Goods_Outwards_Notes",
-                criteria: setCreiteria,
-                page: 1,
-                pageSize: 200
+                    reportName: "All_Goods_Outwards_Notes",
+                    criteria: setCreiteria,
             }
-            await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
-                console.log(response.data);
-                for(let i = 0; i < response.data.length; i++){
-                    GONID+="Goods_Outwards_Notes == "+response.data[i].ID;
-                    if(response.data[i+1]){
-                        GONID+="||";
+            
+            ZOHO.CREATOR.API.getRecordCount(config).then(function (response) {
+                //your code goes here.
+                console.log(response.result.records_count);
+                getCount = response.result.records_count;
+                
+            });
+            let totalIssued = 0;
+
+            if(setCreiteria.length > 0 && getCount > 0){
+                var config = {
+                    appName: "girish-exports",
+                    reportName: "All_Goods_Outwards_Notes",
+                    criteria: setCreiteria,
+                    page: 1,
+                    pageSize: 200
+                }    
+                await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
+                    console.log(response.data);
+                    for (let i = 0; i < response.data.length; i++) {
+                        GONID += "Goods_Outwards_Notes == " + response.data[i].ID;
+                        if (response.data[i + 1]) {
+                            GONID += "||";
+                        }
                     }
+                })
+
+                let gonItem = [];
+                console.log(GONID);
+                
+                config = {
+                    appName: "girish-exports",
+                    reportName: "GON_Items",
+                    criteria: GONID,
+                    page: 1,
+                    pageSize: 200
                 }
-            })
-            let gonItem = [];
-            config = {
-                appName: "girish-exports",
-                reportName: "GON_Items",
-                criteria: GONID,
-                page: 1,
-                pageSize: 200
+                await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
+                    gonItem = response.data;
+                })
+                
+                getfilterGON = gonItem.filter(obj => obj.Items.ID == e.Item_ID && obj.Size.ID == e.Size_ID);
+                getfilterGON.forEach(e => {
+                    totalIssued += parseFloat(e.GON_Qty || 0);
+                })
             }
-            await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
-                gonItem = response.data;
-            })
-            gonItem.forEach(e => {
-                if(e.Items.display_value.includes("MAIN TAG")){
-                    console.log(e);
-                }
-            })
             
             
 
+
+
             const mergeArray = [...getAllAcceseries, ...getAllFabric];
             // console.log(mergeArray);
-            const onlyForCategory =[];
+            const onlyForCategory = [];
             const filterByItemsAndSize = (data) => {
                 return Object.values(
-                  data.reduce((acc, curr) => {
-                    // console.log(curr);
-                    
-                    const key = `${curr.Items.ID}-${curr.Size.ID}`;
-                    if (!acc[key]) {
-                      acc[key] = { ...curr }; // Create a new object for the key
-                    } else {
-                      acc[key].Qty += curr.Qty; // Aggregate the qty for duplicate items and sizes
-                    }
-                    return acc;
-                  }, {})
+                    data.reduce((acc, curr) => {
+                        // console.log(curr);
+
+                        const key = `${curr.Items.ID}-${curr.Size.ID}`;
+                        if (!acc[key]) {
+                            acc[key] = { ...curr }; // Create a new object for the key
+                        } else {
+                            acc[key].Qty += curr.Qty; // Aggregate the qty for duplicate items and sizes
+                        }
+                        return acc;
+                    }, {})
                 );
-              };
+            };
 
 
 
             const result = filterByItemsAndSize(mergeArray);
             let productData = {};
-            let totalCount = 0, copy = 0; 
+            let totalCount = 0, copy = 0;
             mergeArray.forEach(e => {
+                
                 let key = `${e.Items.ID}_${e.Size.ID}_${e.Consumption_Unit.ID}`;
-                if(!productData[key]){
+                if (!productData[key]) {
                     productData[key] = {
-                        Consumption_Unit : e.Consumption_Unit.display_value,
-                        Consumption_ID : e.Consumption_Unit.ID,
-                        Size :  e.Size.display_value,
-                        Size_ID :  e.Size.ID,
-                        Item : e.Items.display_value,
-                        Item_ID : e.Items.ID,
-                        Category : e.Item_Category.display_value,
-                        Category_ID : e.Item_Category.ID,
-                        Qty : parseInt(e.Consumption) || 0,
+                        Consumption_Unit: e.Consumption_Unit.display_value,
+                        Consumption_ID: e.Consumption_Unit.ID,
+                        Size: e.Size.display_value,
+                        Size_ID: e.Size.ID,
+                        Item: e.Items.display_value,
+                        Item_ID: e.Items.ID,
+                        Category: e.Item_Category.display_value,
+                        Category_ID: e.Item_Category.ID,
+                        Qty: parseInt(e.Total_Required_Qty) || 0,
                     }
-                }else{
-                    productData[key].Qty +=e.Consumption
-                    copy +=1;
+                } else {
+                    productData[key].Qty += e.Consumption
+                    copy += 1;
                 }
-                totalCount +=1;
+                totalCount += 1;
             });
             const getAllVal = Object.values(productData);
             // console.log(getAllVal[0]);
@@ -259,64 +283,67 @@ ZOHO.CREATOR.init()
 
             const getCategory = document.getElementById("itemCategory");
 
-            getCategory.addEventListener("change",(e) => {
+            getCategory.addEventListener("change", (e) => {
                 console.log(e.target.value,);
-            // iterateTable(getAllVal);
+                // iterateTable(getAllVal);
                 let getFilterVal = getAllVal.filter(obj => obj.Category_ID == e.target.value);
-                if(getFilterVal.length == 0){
+                if (getFilterVal.length == 0) {
                     getFilterVal = getAllVal;
                 }
-                
-                iterateTable(getFilterVal);    
+
+                iterateTable(getFilterVal);
             })
-            
-              function iterateTable(val) {
+
+            function iterateTable(val) {
                 const cateList = [];
-            const getCategory = document.getElementById("itemCategory");
+                const getCategory = document.getElementById("itemCategory");
 
                 const subform = document.getElementById("tablebody");
                 subform.innerHTML = "";
-                val.forEach(async (e,i) => {
-                    console.log(e.Size);
+                val.forEach(async (e, i) => {
+                    console.log(e);
 
-                    
-                  // for item category
-                  if(!cateList.includes(e.Category_ID) || cateList.length == 0){
-                    cateList.push(e.Category_ID);
-                    const option = document.createElement("option");
-                    option.value = e.Category_ID;
-                    option.textContent = e.Category;
-                    getCategory.appendChild(option);
-                  }
-                  let totalIssued = 0;
-                  getfilterGON = gonItem.filter(obj => obj.Items.ID == e.Item_ID && obj.Size.ID == e.Size_ID);
-                  getfilterGON.forEach(e => {
-                    totalIssued += parseFloat(e.GON_Qty ||0);
-                  })
-                  totalIssued.toFixed(4);
-                //   console.log(getfilterGON);
-                  console.log(ourRef);
-                config2 = {
-                    appName: "girish-exports",
-                    reportName: "All_Stocks",
-                    criteria :ourRef,
-                    page: 1,
-                    pageSize: 200
-                    
-                }
-                await ZOHO.CREATOR.API.getAllRecords(config2).then(function (response) {
-                    console.log("Stock",response.data);
-                });
-                // console.log(newObj);
-                  
-                  
-  
-                  // for item category
-  
-  
-                  const row = document.createElement("tr");
-                  row.id = "row"+i;
-                  row.innerHTML = `
+
+                    // for item category
+                    if (!cateList.includes(e.Category_ID) || cateList.length == 0) {
+                        cateList.push(e.Category_ID);
+                        const option = document.createElement("option");
+                        option.value = e.Category_ID;
+                        option.textContent = e.Category;
+                        getCategory.appendChild(option);
+                    }
+                
+                    //    totalIssued = totalIssued.toFixed(4);
+                      console.log(ourRef.length);
+                    console.log(ourRef);
+                    var config2 = {
+                        appName: "girish-exports",
+                        reportName: "All_Stocks",
+                        criteria: ourRef,
+                        page: 1,
+                        pageSize: 200
+
+                    }
+                    await ZOHO.CREATOR.API.getAllRecords(config2).then(function (response) {
+                        console.log("Stock", response.data);
+                    });
+                    // console.log(newObj);
+
+
+
+                    // for item category
+
+
+                    const row = document.createElement("tr");
+                    row.id = "row" + i;
+                    row.innerHTML = `
+                    <td  class="border-t-2 border-gray-200 p-2" >
+                      <span id="${i}" class="cursor-pointer deleteRow">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="color:red" class=" size-6">
+                          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+                        </svg>
+                      </span>
+                  </td>
                   <td class="border-t-2 border-gray-200 p-2">
                       <select id="item${i}"class=" bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500">
                           <option selected value="${e.Item_ID || ""} ">${e.Item || "Select"}</option>
@@ -339,27 +366,22 @@ ZOHO.CREATOR.init()
                   <td  class="border-t-2 border-gray-200 p-2">
                       <input type="text" id="issueQty${i}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
                   </td>
-                  <td  class="border-t-2 border-gray-200 p-2" >
-                      <span id="${i}" class="cursor-pointer deleteRow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="color:red" class=" size-6">
-  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
-</svg>
-</span>
-                  </td>
+                  
                   `;
-                  subform.appendChild(row);
-  
-              })
-              }
+                    subform.appendChild(row);
 
-        }) 
+                })
+            }
+
+        })
 
 
-        document.getElementById("buttonContainer").addEventListener("click",(e)=>{
+        document.getElementById("buttonContainer").addEventListener("click", (e) => {
             console.log(e.target);
 
-            
 
-            if(e.target.id == "submit"){
+
+            if (e.target.id == "submit") {
                 const planSheet = document.getElementById("planSheet").value || null;
                 const fromWarehouse = document.getElementById("fromWarehouse").value || null;
                 const toWarehouse = document.getElementById("toWarehouse").value || null;
@@ -367,103 +389,122 @@ ZOHO.CREATOR.init()
                 const itemCategory = document.getElementById("itemCategory").value || null;
                 const orderID = [];
                 const orderSpan = Array.from(Order.getElementsByTagName('span'))
-                orderSpan.forEach(e=> {
+                orderSpan.forEach(e => {
                     orderID.push(e.id);
-                    
+
                 })
                 const subform = [];
 
                 const tablebody = document.getElementById("tablebody");
                 const tablelength = tablebody.getElementsByTagName("tr").length;
-                console.log("Plan Sheet", planSheet, "fromWarehouse", fromWarehouse,"toWarehouse", toWarehouse,"Order", Order.children[0], "item Category",itemCategory);
+                console.log("Plan Sheet", planSheet, "fromWarehouse", fromWarehouse, "toWarehouse", toWarehouse, "Order", Order.children[0], "item Category", itemCategory);
                 console.log(subform);
+                const allEmpty = [];
+                // check null or empty values
+
+                for (let i = 0; i < tablelength; i++) {
+                    const getVal = document.getElementById("issueQty" + i).value || null;
+                    if (getVal == null) {
+                        allEmpty.push(false);
+                    } else {
+                        allEmpty.push(true);
+                    }
+                }
+                planSheet == null ? allEmpty.push(false) : allEmpty.push(true);
+                fromWarehouse == null ? allEmpty.push(false) : allEmpty.push(true);
+                toWarehouse == null ? allEmpty.push(false) : allEmpty.push(true);
+                Order == null ? allEmpty.push(false) : allEmpty.push(true);
+
                 const uploadData = {
-                    data : {
-                        Plan_Sheet : planSheet,
-                        From_Warehouse : fromWarehouse,
-                        Business_Warehouse : toWarehouse,
-                        Order : orderID,
-                        Show_Items : true,
-                        Item_Category : itemCategory,
-                        GON_Items : subform
+                    data: {
+                        Plan_Sheet: planSheet,
+                        From_Warehouse: fromWarehouse,
+                        Business_Warehouse: toWarehouse,
+                        Order: orderID,
+                        Show_Items: true,
+                        Item_Category: itemCategory,
+                        GON_Items: subform
                     }
                 }
                 console.log(uploadData);
-                
-                config = {
-                    appName: "girish-exports",
-                    formName: "Goods_Outwards_Notes",
-                    data : uploadData
+                console.log(allEmpty);
+                if (allEmpty.includes(false)) {
+                    alert("Please Enter All Manditory fields");
                 }
-                //add record API
-                ZOHO.CREATOR.API.addRecord(config).then(async function(response){
-                    if(response.data.ID){
-                        for(let i= 0; i<tablelength; i++){
-                            const newObj = {
-                                data:{
-                                    Items : document.getElementById("item"+i).value, 
-                                    Size : document.getElementById("size"+i).value,
-                                    Order_Qty : document.getElementById("orderQty"+i).value,
-                                    Issued_Qty : document.getElementById("issueQty"+i).value,
-                                    GON_Qty : document.getElementById("gonQty"+i).value,
-                                    Goods_Outwards_Notes : response.data.ID,
-                                }
-                            }
-                            // stock
-                            config2 = {
-                                appName: "girish-exports",
-                                formName: "G_O_N_Items",
-                                data : newObj
-                            }
-                            ZOHO.CREATOR.API.addRecord(config2).then(async function(response){
-                                console.log(response);
-                                
-                            })
-                            
-                        }
-                        location.reload();
+                else {
+
+                    config = {
+                        appName: "girish-exports",
+                        formName: "Goods_Outwards_Notes",
+                        data: uploadData
                     }
-                });
-                
-                
+                    //add record API
+                    ZOHO.CREATOR.API.addRecord(config).then(async function (response) {
+                        if (response.data.ID) {
+                            for (let i = 0; i < tablelength; i++) {
+                                const newObj = {
+                                    data: {
+                                        Items: document.getElementById("item" + i).value,
+                                        Size: document.getElementById("size" + i).value,
+                                        Order_Qty: document.getElementById("orderQty" + i).value,
+                                        Issued_Qty: document.getElementById("issueQty" + i).value,
+                                        GON_Qty: document.getElementById("gonQty" + i).value,
+                                        Goods_Outwards_Notes: response.data.ID,
+                                    }
+                                }
+                                // stock
+                                config2 = {
+                                    appName: "girish-exports",
+                                    formName: "G_O_N_Items",
+                                    data: newObj
+                                }
+                                ZOHO.CREATOR.API.addRecord(config2).then(async function (response) {
+                                    console.log(response);
+
+                                })
+
+                            }
+                            location.reload();
+                        }
+                    });
+                }
+
             }
 
-            else if(e.target.id == "reset"){
+            else if (e.target.id == "reset") {
                 location.reload();
             }
-            
-        })
-    const tableBody = document.querySelector("#tablebody")
-    tableBody.addEventListener("click", (e) => {
-        const deleteBtn = e.target.closest("span");
-    
-        if (deleteBtn && deleteBtn.classList.contains("deleteRow")) {
-             // Find the closest row <tr>
-            let row = deleteBtn.closest("tr");
-            if (row) {
-                let rowId = row.getAttribute("id"); // Get the row ID
-                console.log("Deleting row with ID:", rowId);
-                
-                row.remove(); // Remove the row from the DOM
-                const rowcount = tableBody.children.length;
-                console.log(rowcount);
-                if(rowcount == 0){
-                    document.getElementById("submit").style.pointerEvents = "none";
-                }else{
-                    document.getElementById("submit").style.pointerEvents = "auto";
-                    document.getElementById("submit").style.cursor = "pointer";
-                }
-            }
-        } else {
-            console.log(false);
-        }
-    });
-              
-// function deleteRow(button) {
-//     let row = button.parentNode.parentNode;
-//     let table = document.getElementById("myTable");
-//     let rowIndex = row.rowIndex;
-//     table.deleteRow(rowIndex);
-// }
 
+        })
+
+        // Delete row
+
+
+        const tableBody = document.querySelector("#tablebody")
+        tableBody.addEventListener("click", (e) => {
+            const deleteBtn = e.target.closest("span");
+
+            if (deleteBtn && deleteBtn.classList.contains("deleteRow")) {
+                // Find the closest row <tr>
+                let row = deleteBtn.closest("tr");
+                if (row) {
+                    let rowId = row.getAttribute("id"); // Get the row ID
+                    console.log("Deleting row with ID:", rowId);
+
+                    row.remove(); // Remove the row from the DOM
+                    const rowcount = tableBody.children.length;
+                    console.log(rowcount);
+                    if (rowcount == 0) {
+                        document.getElementById("submit").style.pointerEvents = "none";
+                    } else {
+                        document.getElementById("submit").style.pointerEvents = "auto";
+                        document.getElementById("submit").style.cursor = "pointer";
+                    }
+                }
+            } else {
+                console.log(false);
+            }
+        });
+
+        // 
     })

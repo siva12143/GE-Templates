@@ -16,4 +16,7 @@
     padding: 20px;
     
  }
+ #buttonContainer > input{
+    cursor: pointer;
+ }
  

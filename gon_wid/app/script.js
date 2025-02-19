@@ -199,7 +199,12 @@ ZOHO.CREATOR.init()
             await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
                 gonItem = response.data;
             })
-            console.log(gonItem);
+            gonItem.forEach(e => {
+                if(e.Items.display_value.includes("MAIN TAG")){
+                    console.log(e);
+                }
+            })
+            
             
 
             const mergeArray = [...getAllAcceseries, ...getAllFabric];
@@ -220,6 +225,9 @@ ZOHO.CREATOR.init()
                   }, {})
                 );
               };
+
+
+
             const result = filterByItemsAndSize(mergeArray);
             let productData = {};
             let totalCount = 0, copy = 0; 
@@ -254,8 +262,10 @@ ZOHO.CREATOR.init()
             getCategory.addEventListener("change",(e) => {
                 console.log(e.target.value,);
             // iterateTable(getAllVal);
-                const getFilterVal = getAllVal.filter(obj => obj.Category_ID == e.target.value)
-                console.log(getFilterVal);
+                let getFilterVal = getAllVal.filter(obj => obj.Category_ID == e.target.value);
+                if(getFilterVal.length == 0){
+                    getFilterVal = getAllVal;
+                }
                 
                 iterateTable(getFilterVal);    
             })
@@ -267,6 +277,9 @@ ZOHO.CREATOR.init()
                 const subform = document.getElementById("tablebody");
                 subform.innerHTML = "";
                 val.forEach(async (e,i) => {
+                    console.log(e.Size);
+
+                    
                   // for item category
                   if(!cateList.includes(e.Category_ID) || cateList.length == 0){
                     cateList.push(e.Category_ID);
@@ -275,11 +288,12 @@ ZOHO.CREATOR.init()
                     option.textContent = e.Category;
                     getCategory.appendChild(option);
                   }
-                  totalIssued = 0;
-                  getfilterGON = gonItem.filter(obj => obj.Items.ID == e.Item_ID);
+                  let totalIssued = 0;
+                  getfilterGON = gonItem.filter(obj => obj.Items.ID == e.Item_ID && obj.Size.ID == e.Size_ID);
                   getfilterGON.forEach(e => {
-                    totalIssued += parseFloat(e.Issued_Qty);
+                    totalIssued += parseFloat(e.GON_Qty ||0);
                   })
+                  totalIssued.toFixed(4);
                 //   console.log(getfilterGON);
                   console.log(ourRef);
                 config2 = {
@@ -325,6 +339,12 @@ ZOHO.CREATOR.init()
                   <td  class="border-t-2 border-gray-200 p-2">
                       <input type="text" id="issueQty${i}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
                   </td>
+                  <td  class="border-t-2 border-gray-200 p-2" >
+                      <span id="${i}" class="cursor-pointer deleteRow"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3" stroke="currentColor" style="color:red" class=" size-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+</svg>
+</span>
+                  </td>
                   `;
                   subform.appendChild(row);
   
@@ -332,35 +352,29 @@ ZOHO.CREATOR.init()
               }
 
         }) 
+
+
         document.getElementById("buttonContainer").addEventListener("click",(e)=>{
             console.log(e.target);
 
-            const planSheet = document.getElementById("planSheet").value || null;
-            const fromWarehouse = document.getElementById("fromWarehouse").value || null;
-            const toWarehouse = document.getElementById("toWarehouse").value || null;
-            const Order = document.getElementById("order");
-            const itemCategory = document.getElementById("itemCategory").value || null;
-            const orderID = [];
-            const orderSpan = Array.from(Order.getElementsByTagName('span'))
-            orderSpan.forEach(e=> {
-                orderID.push(e.id);
-                
-            })
-            const subform = [];
-
-            const tablebody = document.getElementById("tablebody");
-            const tablelength = tablebody.getElementsByTagName("tr").length;
-            for(let i= 0; i<tablelength; i++){
-                const newObj = {
-                    Item : document.getElementById("item"+i).value, 
-                    Size : document.getElementById("size"+i).value,
-                    Order_Qty : document.getElementById("orderQty"+i).value,
-                    Issued_Qty : document.getElementById("issueQty"+i).value,
-                }
-                subform.push(newObj);
-            }
+            
 
             if(e.target.id == "submit"){
+                const planSheet = document.getElementById("planSheet").value || null;
+                const fromWarehouse = document.getElementById("fromWarehouse").value || null;
+                const toWarehouse = document.getElementById("toWarehouse").value || null;
+                const Order = document.getElementById("order");
+                const itemCategory = document.getElementById("itemCategory").value || null;
+                const orderID = [];
+                const orderSpan = Array.from(Order.getElementsByTagName('span'))
+                orderSpan.forEach(e=> {
+                    orderID.push(e.id);
+                    
+                })
+                const subform = [];
+
+                const tablebody = document.getElementById("tablebody");
+                const tablelength = tablebody.getElementsByTagName("tr").length;
                 console.log("Plan Sheet", planSheet, "fromWarehouse", fromWarehouse,"toWarehouse", toWarehouse,"Order", Order.children[0], "item Category",itemCategory);
                 console.log(subform);
                 const uploadData = {
@@ -383,7 +397,6 @@ ZOHO.CREATOR.init()
                 }
                 //add record API
                 ZOHO.CREATOR.API.addRecord(config).then(async function(response){
-                    // console.log(response);
                     if(response.data.ID){
                         for(let i= 0; i<tablelength; i++){
                             const newObj = {
@@ -392,13 +405,23 @@ ZOHO.CREATOR.init()
                                     Size : document.getElementById("size"+i).value,
                                     Order_Qty : document.getElementById("orderQty"+i).value,
                                     Issued_Qty : document.getElementById("issueQty"+i).value,
+                                    GON_Qty : document.getElementById("gonQty"+i).value,
                                     Goods_Outwards_Notes : response.data.ID,
                                 }
                             }
                             // stock
-
+                            config2 = {
+                                appName: "girish-exports",
+                                formName: "G_O_N_Items",
+                                data : newObj
+                            }
+                            ZOHO.CREATOR.API.addRecord(config2).then(async function(response){
+                                console.log(response);
+                                
+                            })
                             
                         }
+                        location.reload();
                     }
                 });
                 
@@ -406,19 +429,41 @@ ZOHO.CREATOR.init()
             }
 
             else if(e.target.id == "reset"){
-                console.log("Reset Run");
+                location.reload();
             }
             
         })
-        
-    // config = {
-    //     appName: "girish-exports",
-    //     formName: "Goods_Outwards_Notes",
-    //     data : uploadData
-    // }
-    //update record API
-    // ZOHO.CREATOR.API.updateRecord(config).then(function(response){
-    //  //callback block
-    // });
+    const tableBody = document.querySelector("#tablebody")
+    tableBody.addEventListener("click", (e) => {
+        const deleteBtn = e.target.closest("span");
+    
+        if (deleteBtn && deleteBtn.classList.contains("deleteRow")) {
+             // Find the closest row <tr>
+            let row = deleteBtn.closest("tr");
+            if (row) {
+                let rowId = row.getAttribute("id"); // Get the row ID
+                console.log("Deleting row with ID:", rowId);
+                
+                row.remove(); // Remove the row from the DOM
+                const rowcount = tableBody.children.length;
+                console.log(rowcount);
+                if(rowcount == 0){
+                    document.getElementById("submit").style.pointerEvents = "none";
+                }else{
+                    document.getElementById("submit").style.pointerEvents = "auto";
+                    document.getElementById("submit").style.cursor = "pointer";
+                }
+            }
+        } else {
+            console.log(false);
+        }
+    });
+              
+// function deleteRow(button) {
+//     let row = button.parentNode.parentNode;
+//     let table = document.getElementById("myTable");
+//     let rowIndex = row.rowIndex;
+//     table.deleteRow(rowIndex);
+// }
 
     })

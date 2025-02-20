@@ -173,7 +173,7 @@ ZOHO.CREATOR.init()
             })
             let GONID = "";
             let getCount = 0;
-            console.log(setCreiteria);
+            // console.log(setCreiteria);
             var config2 = {
                 appName: "girish-exports",
                 reportName: "All_Goods_Outwards_Notes",
@@ -182,12 +182,12 @@ ZOHO.CREATOR.init()
 
             await ZOHO.CREATOR.API.getRecordCount(config2).then(function (response) {
                 //your code goes here.
-                console.log(response.result.records_count);
+                // console.log(response.result.records_count);
                 getCount = response.result.records_count;
 
             });
             
-            console.log(setCreiteria, getCount);
+            // console.log(setCreiteria, getCount);
             if (setCreiteria.length > 0 && getCount > 0) {
                 var config = {
                     appName: "girish-exports",
@@ -207,7 +207,7 @@ ZOHO.CREATOR.init()
                 })
 
                 
-                console.log(GONID);
+                // console.log(GONID);
 
                 config = {
                     appName: "girish-exports",
@@ -219,7 +219,7 @@ ZOHO.CREATOR.init()
                 await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
                     gonItem = response.data;
                 })
-                console.log(gonItem);
+                // console.log(gonItem);
             }
 
 
@@ -248,7 +248,7 @@ ZOHO.CREATOR.init()
 
             const result = filterByItemsAndSize(mergeArray);
             let productData = {};
-            console.log(mergeArray);
+            // console.log(mergeArray);
 
             let totalCount = 0, copy = 0;
             mergeArray.forEach(e => {
@@ -283,13 +283,13 @@ ZOHO.CREATOR.init()
             const getCategory = document.getElementById("itemCategory");
 
             getCategory.addEventListener("change", (e) => {
-                console.log(e.target.value,);
+                // console.log(e.target.value,);
                 // iterateTable(getAllVal);
                 let getFilterVal = getAllVal.filter(obj => obj.Category_ID == e.target.value);
                 if (getFilterVal.length == 0) {
                     getFilterVal = getAllVal;
                 }
-                console.log(getFilterVal);
+                // console.log(getFilterVal);
 
                 iterateTable(getFilterVal);
             })
@@ -303,10 +303,10 @@ ZOHO.CREATOR.init()
                 subform.innerHTML = "";
                 val.forEach(async (e, i) => {
                 getfilterGON = gonItem.filter(obj => obj.Items.ID == e.Item_ID && obj.Size.ID == e.Size_ID);
-                console.log(getfilterGON[0]);
+                // console.log(getfilterGON[0]);
                 const filterVal = getfilterGON[0]?.GON_Qty;
-                totalIssued = filterVal
-                console.log(filterVal);
+                totalIssued = filterVal || 0;
+                // console.log(filterVal);
                     // for item category
                     if (!cateList.includes(e.Category_ID) || cateList.length == 0) {
                         cateList.push(e.Category_ID);
@@ -317,8 +317,8 @@ ZOHO.CREATOR.init()
                     }
 
                     //    totalIssued = totalIssued.toFixed(4);
-                    console.log(ourRef.length);
-                    console.log(ourRef);
+                    // console.log(ourRef.length);
+                    // console.log(ourRef);
                     var config2 = {
                         appName: "girish-exports",
                         reportName: "All_Stocks",
@@ -328,7 +328,7 @@ ZOHO.CREATOR.init()
 
                     }
                     await ZOHO.CREATOR.API.getAllRecords(config2).then(function (response) {
-                        console.log("Stock", response.data);
+                        // console.log("Stock", response.data);
                     });
                     // console.log(newObj);
 
@@ -386,7 +386,7 @@ ZOHO.CREATOR.init()
 
 
         document.getElementById("buttonContainer").addEventListener("click", (e) => {
-            console.log(e.target);
+            // console.log(e.target);
 
 
 
@@ -412,14 +412,14 @@ ZOHO.CREATOR.init()
                 // check null or empty values
 
                 for (let i = 0; i < tablelength; i++) {
-                    console.log("issueQty" + i);
+                    // console.log("issueQty" + i);
                     let getRowID = tableBody.rows[i].id;
                     getRowID = getRowID.slice(3);
-                    console.log(getRowID);
+                    // console.log(getRowID);
 
 
 
-                    console.log(document.getElementById("issueQty" + getRowID));
+                    // console.log(document.getElementById("issueQty" + getRowID));
                     const getVal = document.getElementById("issueQty" + getRowID).value || null;
 
                     if (getVal == null) {
@@ -444,8 +444,8 @@ ZOHO.CREATOR.init()
                         GON_Items: subform
                     }
                 }
-                console.log(uploadData);
-                console.log(allEmpty);
+                // console.log(uploadData);
+                // console.log(allEmpty);
                 if (allEmpty.includes(false)) {
                     alert("Please Enter All Manditory fields");
                 }
@@ -510,11 +510,11 @@ ZOHO.CREATOR.init()
                 let row = deleteBtn.closest("tr");
                 if (row) {
                     let rowId = row.getAttribute("id"); // Get the row ID
-                    console.log("Deleting row with ID:", rowId);
+                    // console.log("Deleting row with ID:", rowId);
 
                     row.remove(); // Remove the row from the DOM
                     const rowcount = tableBody.children.length;
-                    console.log(rowcount);
+                    // console.log(rowcount);
                     if (rowcount == 0) {
                         document.getElementById("submit").style.pointerEvents = "none";
                     } else {

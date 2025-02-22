@@ -40,11 +40,15 @@ ZOHO.CREATOR.init()
             let setCreiteria = "";
             const count = grnList.length;
             grnList.forEach((e, i) => {
+                console.log(e);
+                
                 setCreiteria += "ID == " + e.Items.ID;
                 if (i + 1 != count) {
-                    setCreiteria += "\n";
+                    setCreiteria += "||";
                 }
             })
+            console.log(setCreiteria);
+            
             const createItemList = [];
             config = {
                 appName: "girish-exports",
@@ -54,20 +58,23 @@ ZOHO.CREATOR.init()
                 pageSize: 200
             }
             await ZOHO.CREATOR.API.getAllRecords(config).then(async function (response) {
-                // console.log(response.data);
+                console.log(response.data);
                 response.data.forEach((e) => {
                     const createMap = { ID: e.ID, url: e.Url.url + "?toolbar=false&appearance=light&themecolor=green" }
                     createItemList.push(createMap)
                 })
             });
+            
             const table = document.querySelector("#subform tbody");
             table.innerHTML = "";
             let product = {};
             grnList.forEach((e, i) => {
                 
-                const filterUrl = createItemList.filter(obj => obj.ID == e.Items.ID);
+                // const filterUrl = createItemList.filter(obj => obj.ID == e.Items.ID);
+                const filterUrl = createItemList.find(obj => obj.ID == e.Items.ID);
                 const row = document.createElement("tr");
-                console.log(e);
+                console.log(e.Items.ID, createItemList[0].ID);
+                console.log(filterUrl);
                 
                 row.id = e.ID
                 row.innerHTML = `
@@ -77,7 +84,7 @@ ZOHO.CREATOR.init()
                                 <option selected value="${e.Items.ID || ""} ">${e.Items.display_value || "Select"}</option>
                             </select>
                         </td>
-                        <td  class="w-[250px] border-t-2 border-gray-200 p-2"><iframe id="image${e.ID}" src="${filterUrl[0].url}" scrolling="no" frameborder="0" allowfullscreen=true width="100%"  title="Embed code" ></iframe></td>
+                        <td  class="w-[250px] border-t-2 border-gray-200 p-2"><iframe id="image${e.ID}" src="${filterUrl.url}" scrolling="no" frameborder="0" allowfullscreen=true width="100%"  title="Embed code" ></iframe></td>
                         <td  class="border-t-2 border-gray-200 p-2">
                             <div class="form-group w-full p-4">
                                 <select id="size${e.ID}"
@@ -90,10 +97,10 @@ ZOHO.CREATOR.init()
                             <input type="text" id="recived${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" required />
                         </td>
                         <td  class="border-t-2 border-gray-200 p-2">
-                            <input type="text" id="rejected${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" required />
+                            <input type="text" id="rejected${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="" />
                         </td>
                         <td  class="border-t-2 border-gray-200 p-2 "style="display:none">
-                            <input type="text" id="grnQty${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="${e.GRN_Recived || 0}" required />
+                            <input type="text" id="grnQty${e.ID}" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" value="${e.GRN_Recived || 0}"/>
                         </td>
                 `
                 table.appendChild(row);
@@ -108,55 +115,72 @@ ZOHO.CREATOR.init()
 
 
 
-        const action = document.getElementById("buttonContainer");
-        action.addEventListener("click", (e) => {
+        const action = document.getElementById("submit");
+        action.addEventListener("click", (event) => {
             // get subform values
             const Subform = [];
 
             const subform = document.getElementById("tablebody");
             const rows = subform.querySelectorAll('tr');
+           
+            // if (event.target.id == "submit") {
+            //     console.log(event.target);
+                console.log(action);
+                
+                // submitValue()
+                // const newData = {
+                //     data : {
+                //         Warehouse : getAllPO.Warehouse,
+                //         Storage : getAllPO.Storage,
+                //         Recived_Flag: getAllPO.Recived_Flag,
+                //         Purchase_Order1:getAllPO.Purchase_Order1,
+                //         Invoice_No:getAllPO.Invoice_No,
+                //         Invoice_Date:getAllPO.Invoice_Date,
+                //         Gate_No:getAllPO.Gate_No,
+                //         GRN_ID:getAllPO.GRN_ID,
+                //         GRN_Date:getAllPO.GRN_Date,
+                //         Financiar_Type:getAllPO.Financiar_Challan_No,
+                //         Chellan_No:getAllPO.Chellan_No,
+                //         Financiar_Challan_No:getAllPO.Financiar_Challan_No
+                //     }
+                // }
+                // console.log("RUN2");
 
-            if (e.target.id == "submit") {
+                // config = {
+                //     appName: "girish-exports",
+                //     reportName: "All_Goods_Recived_Note",
+                //     id: queryParams.IdVal,
+                //     data : newData,
+                // }
+                // ZOHO.CREATOR.API.updateRecord(config).then(function (response) {
+                //     console.log(response.data);
+                // });
+                // console.log(config);
                 rows.forEach((e) => {
                     const recivedQty = e.querySelector("td #recived" + e.id).value
-                    const rejectedQty = e.querySelector("td #rejected" + e.id).value
+                    const rejectedQty = e.querySelector("td #rejected" + e.id).value || 0
                     const grnQty = e.querySelector("td #grnQty" + e.id).value
                     const Data = {
                         data: {
                             Recived_Qty : recivedQty,
                             Rejected : rejectedQty,
-                            GRN_Recived : parseInt(recivedQty) + parseInt(grnQty),
                         }
                     };
-
                     config = {
                         appName: "girish-exports",
                         reportName: "All_Grn_Items",
                         id: e.id,
                         data: Data
                     }
-
                     //update record API
                     ZOHO.CREATOR.API.updateRecord(config).then(function (response) {
-                        //callback block
                         console.log(response);
-                        
-                    });
+                    })  
+                             
                 })
                 const newData = {
                     data : {
-                        Warehouse : getAllPO.Warehouse,
-                        Storage : getAllPO.Storage,
-                        Recived_Flag: getAllPO.Recived_Flag,
-                        Purchase_Order1:getAllPO.Purchase_Order1,
-                        Invoice_No:getAllPO.Invoice_No,
-                        Invoice_Date:getAllPO.Invoice_Date,
-                        Gate_No:getAllPO.Gate_No,
                         GRN_ID:getAllPO.GRN_ID,
-                        GRN_Date:getAllPO.GRN_Date,
-                        Financiar_Type:getAllPO.Financiar_Challan_No,
-                        Chellan_No:getAllPO.Chellan_No,
-                        Financiar_Challan_No:getAllPO.Financiar_Challan_No
                     }
                 }
                 console.log("RUN2");
@@ -168,15 +192,12 @@ ZOHO.CREATOR.init()
                     data : newData,
                 }
                 ZOHO.CREATOR.API.updateRecord(config).then(function (response) {
-                    console.log(response.data);
-                    console.log("run1");
-                });
-                console.log(config);
-                
-            }
-            if (e.target.id == "reset") {
-                location.reload();
-            }
+                    console.log(response);
+                }); 
+            // }
+            // else if (event.target.id == "reset") {
+            //     location.reload();
+            // }
 
         })
 

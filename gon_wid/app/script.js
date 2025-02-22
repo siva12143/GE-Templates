@@ -485,7 +485,7 @@ ZOHO.CREATOR.init()
                                 })
 
                             }
-                            // location.reload();
+                            location.reload();
                         }
                     });
                 }

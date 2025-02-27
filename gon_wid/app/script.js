@@ -32,7 +32,7 @@ ZOHO.CREATOR.init()
                 renderRecordCount += 200;
                 response.data.forEach(e => {
                     getAllPlanSheet.push(e);
-                    console.log(e, "response");
+                    // console.log(e, "response");
 
                 });
             });
@@ -485,7 +485,7 @@ ZOHO.CREATOR.init()
                                 })
 
                             }
-                            location.reload();
+                            // location.reload();
                         }
                     });
                 }

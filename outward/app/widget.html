@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="p-4">
+
+  <div class="parentContainer p-4 m-6">
+   <div class="relative inline-block w-1/6">
+      <select id="osValues"
+        class="block appearance-none w-full bg-white border border-gray-300 text-gray-700 py-2 px-3 pr-8 rounded leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+        
+      </select>
+      <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+        <svg class="fill-current h-4 w-4" viewBox="0 0 20 20">
+          <path d="M5.5 7l4.5 4.5L14.5 7z" />
+        </svg>
+      </div>
+    </div>
+    
+  </div>
+
+  <div class="tableContainer p-4">
+    <table class="w-[100%] leading-normal">
+      <thead>
+        <tr>
+          <th
+            class="w-[20%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Item
+          </th>
+          <th
+            class="w-[30%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Image
+          </th>
+          <th
+            class="w-[10%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Stock Qty
+          </th>
+          <th
+            class="w-[10%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Warehouse
+          </th>
+          <th
+            class="w-[10%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Outward Qty
+          </th>
+          <th
+            class="w-[10%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            Merchandiser
+          </th>
+          <th
+            class="w-[10%] px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
+            EO
+          </th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+      </tbody>
+    </table>
+  </div>
+  <div class="container flex justify-center p-4 gap-5" id="container">
+    <span id="Update" class="py-2 px-3 bg-blue-400 rounded">Update</span>
+    <span id="Reset" class="py-2 px-3 bg-red-400 rounded">Reset</span>
+  </div>
+  <script src="https://js.zohostatic.com/creator/widgets/version/1.0/widgetsdk-min.js"></script>
+  <script src="js/script.js"></script>
+</body>
+
+</html>
